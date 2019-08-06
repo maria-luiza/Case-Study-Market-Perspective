@@ -5,22 +5,34 @@
 library(ggplot2)
 library(RColorBrewer)
 
-plot_month_value <- function(data, colx, coly, year){
-    coul <- brewer.pal(length(data[[colx]]), "Greens") 
-    barplot(height=data[[coly]],
-            names=data[[colx]],
-            col=coul,
-            xlab="Month", ylab="Mean of Value", 
-            main= paste("Value variation per month (", year, ")", sep=""))
-
-    abline(h = data[which.max(data[[coly]]), ][[coly]], col="red")
+plot_month_value <- function(data, colx, coly, colz, year){
+    data[[colx]] <- factor(data[[colx]], levels = month.name)
+    
+    p <- ggplot(data, aes(x=data[[colx]], y = value)) +
+        geom_bar(aes(fill = variable), stat = "identity", position = "dodge")
+    
+    p <- p+labs(title = paste("Mean Value variation (", year, ")", sep=""),
+                x="Month", y="Value")
+    
+    p <- p + scale_fill_brewer(palette="Set2")
+    p
 }
 
-plot_executive_value <- function(data, colx, coly, colz){
-    coul <- brewer.pal(length(data[[colx]]), "Paired")
-    matplot(data, type = c("b"),pch=1,col = coul) #plot
-    # p <- ggplot(data,
-    #             aes(x = data[[coly]], y = data[[colz]], group = data[[colx]], col = data[[colx]]),
-    #             color=factor(data[[colx]])) + geom_line()
-    # print(p)
+plot_executive_value <- function(data, exec, month, val, year){
+    data[[month]] <- factor(data[[month]], levels = month.abb)
+
+    p <- ggplot(data,
+                aes(x = data[[month]], y = data[[val]], group = data[[exec]], col = factor(data[[exec]])),
+                color=factor(data[[exec]]))
+    
+    p <- p+labs(title = paste0(val, " per Executive (", year, ")"),
+                x="Month", y="Absolute Value", color=exec)
+
+    p <- p + geom_line() + geom_point()
+    
+    p <- p + geom_hline(yintercept = 0,
+                        color = "black",
+                        size=0.75,
+                        linetype="dashed")
+    p
 }

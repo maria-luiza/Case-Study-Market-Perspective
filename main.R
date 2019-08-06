@@ -29,7 +29,7 @@ deals <- sort(unique(data$Lost_Deal))
 data_gen <- list()
 for(i in seq_along(deals)){
     data_deals <- lost_value(data, deals[i])
-    
+
     # Years summary
     sum_years <- list()
 
@@ -56,6 +56,7 @@ for(i in seq_along(deals)){
         min_year_general[[year]] <- year_info$MinValue
     }
     
+
     data_gen[[i]] <- list(sum_years, max_year_general, min_year_general, data_per_year)
     names(data_gen[[i]]) <- c("Summary", "MaxVal", "MinVal", "Data")
     

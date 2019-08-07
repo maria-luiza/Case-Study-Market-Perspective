@@ -69,10 +69,17 @@ for(i in seq_along(deals)){
 
 names(data_gen) <- c("Deal", "Lost")
 
+print("Summary")
+print("---- Deal ----")
+print(data_gen$Deal$Summary)
+print("----------------")
+print("---- Lost ----")
+print(data_gen$Lost$Summary)
+
 # 4. Data Evaluation
 
 # 4.1 Value per month per Year
-png(filename = "value_month_year.png", width = 1200, height = 600, units = "px", res=100)
+png(filename = "Insights/value_month_year.png", width = 1200, height = 600, units = "px", res=100)
 
 plots <- list()
 for(year in years){
@@ -97,7 +104,7 @@ do.call(grid.arrange, c(plots, nrow=length(years)))
 dev.off()
 
 # 4.2 Sales executive thourgh years
-png(filename = "sales_executive_years.png", width = 770, height = 665, units = "px", res=100)
+png(filename = "Insights/sales_executive_years.png", width = 770, height = 665, units = "px", res=100)
 
 plots <- list()
 for(year in years){
@@ -132,24 +139,32 @@ for(year in years){
         # Get information about him
         client_info <- data1$Data[[year]][data1$Data[[year]]$Client == client, ]
         mean_client <- mean(client_info$Value)
-        executives <- unique(client_info$Sales_Executive)
-
-        clients[[deal]][[year]] <- list(client, mean_client, executives)
+        executives <- as.list(unique(as.character(client_info$Sales_Executive)))
+        
+        row <- list(client, mean_client)
+        clientTable <- data.frame(matrix(unlist(row), ncol = 2, byrow = TRUE))
+        names(clientTable) <- c("Client", "Mean Value")
+        clientTable <- cbind(clientTable, executives)
+        
+        clients[[deal]][[year]] <- clientTable
     }
 }
-
-print(clients)
+print("Clients")
+print("--- Deal ---")
+print(clients$Deal)
+print("--- Lost ---")
+print(clients$Lost)
 
 # 4.4 Summary Boxplot
-png(filename = "summary_years.png", width = 825, height = 660, units = "px", res=150)
+png(filename = "Insights/summary_years.png", width = 825, height = 660, units = "px", res=150)
 
 # Get only information used to evaluate
 data_info <- select(data, Year, State, Value, Lost_Deal)
 plot_boxplot_summary(data_info)
 dev.off()
 
-# # 4.5 State Report
-png(filename = "state_report.png", width = 1600, height = 800, units = "px", res=150)
+# 4.5 State Report
+png(filename = "Insights/state_report.png", width = 1600, height = 800, units = "px", res=150)
 data_info <- aggregate(. ~State + Year + Lost_Deal, data=data_info, sum, na.rm=TRUE)
 prop_data <-ddply(data_info,.(Year, Lost_Deal),transform,Prop=(Value/sum(Value)))
 

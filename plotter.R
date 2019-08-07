@@ -3,6 +3,7 @@
 # August/2019
 
 library(ggplot2)
+library(scales)
 library(RColorBrewer)
 
 plot_month_value <- function(data, colx, coly, colz, year){
@@ -50,5 +51,19 @@ plot_boxplot_summary <- function(data){
                         color = "red",
                         size=0.75,
                         linetype="dashed")
+    print(p)
+}
+
+plot_pie_state <- function(data){
+    p <- ggplot(data, aes(x="", y=Prop, fill=State)) +
+        geom_bar(stat="identity", width=1)
+    p <- p + coord_polar("y", start=0, direction=-1)
+    p <- p + facet_grid(facets = .~Year+Lost_Deal)
+    p <- p + labs(x=NULL, y=NULL, fill=NULL, title = "State Value by Years")
+    p <- p + scale_fill_brewer(palette="BuGn")
+    p <- p + geom_text(aes(label = paste0(round(Prop*100,2), "%")), position = position_stack(vjust = 0.5), size=3)
+    p <- p + theme_gray() + theme(axis.line = element_blank(),
+                                  axis.text = element_blank(),
+                                  axis.ticks = element_blank())
     print(p)
 }

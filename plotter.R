@@ -6,8 +6,10 @@ library(ggplot2)
 library(RColorBrewer)
 
 plot_month_value <- function(data, colx, coly, colz, year){
-    data[[colx]] <- factor(data[[colx]], levels = month.name)
+    # Reorder the data based on month name
+    data[[colx]] <- factor(data[[colx]], levels = month.abb)
     
+    # Month value in two bar graphs side by side
     p <- ggplot(data, aes(x=data[[colx]], y = value)) +
         geom_bar(aes(fill = variable), stat = "identity", position = "dodge")
     
@@ -19,8 +21,10 @@ plot_month_value <- function(data, colx, coly, colz, year){
 }
 
 plot_executive_value <- function(data, exec, month, val, year){
+    # Reorder the data based on month name 
     data[[month]] <- factor(data[[month]], levels = month.abb)
-
+    
+    # Absolute value (Deal-Lost) for each Sales Executive per month through years
     p <- ggplot(data,
                 aes(x = data[[month]], y = data[[val]], group = data[[exec]], col = factor(data[[exec]])),
                 color=factor(data[[exec]]))
@@ -35,4 +39,16 @@ plot_executive_value <- function(data, exec, month, val, year){
                         size=0.75,
                         linetype="dashed")
     p
+}
+
+plot_boxplot_summary <- function(data){
+    p <- ggplot(data, aes(x=Year, y=Value, fill = Lost_Deal)) + 
+        geom_boxplot()
+    p <- p+labs(title = "Summary per Year")
+    p <- p + scale_fill_brewer(palette="Set3")
+    p <- p + geom_hline(yintercept = median(data$Value),
+                        color = "red",
+                        size=0.75,
+                        linetype="dashed")
+    print(p)
 }

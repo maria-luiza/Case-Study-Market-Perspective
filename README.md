@@ -6,7 +6,7 @@ The **Case Study** is a R project to evaluate insights in test.csv dataset. The 
 
 R project was developed in RStudio 1.1v using R 3.5.3 version.
 
-###### Dependencies
+##### Dependencies
 
 In this project, the dependecy requirements is described below:
   - ggplot
@@ -16,6 +16,6 @@ In this project, the dependecy requirements is described below:
   - scales
   - RColorBrewer
  
- ###### Input/Output
+ ##### Input/Output
  
  The data used in this evalaution is available on ``Data/`` and the graphs generated on ``Insights/``.

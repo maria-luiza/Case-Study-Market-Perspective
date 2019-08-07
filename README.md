@@ -16,6 +16,6 @@ In this project, the dependecy requirements is described below:
   - scales
   - RColorBrewer
  
- ####### Input/Output
+ ###### Input/Output
  
  The data used in this evalaution is available on ``Data/`` and the graphs generated on ``Insights/``.
